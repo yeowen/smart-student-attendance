@@ -26,9 +26,9 @@ if (strpos($uri, '/conf/php/') !== false) {
     }
 }
 
-// 3. Fallback for any other root/subfolder PHP script
+// 3. Fallback for any other root/subfolder PHP script (except api/index.php)
 $cleanPath = ltrim($uri, '/');
-if (!empty($cleanPath) && substr($cleanPath, -4) === '.php' && file_exists($rootDir . '/' . $cleanPath)) {
+if (!empty($cleanPath) && $cleanPath !== 'api/index.php' && substr($cleanPath, -4) === '.php' && file_exists($rootDir . '/' . $cleanPath)) {
     require $rootDir . '/' . $cleanPath;
     exit;
 }
@@ -38,5 +38,5 @@ http_response_code(404);
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode([
     'success' => false,
-    'message' => 'Endpoint not found.'
+    'message' => 'Endpoint not found for: ' . htmlspecialchars($uri)
 ]);
