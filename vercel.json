@@ -1,6 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "cleanUrls": true,
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.9.0"
@@ -8,52 +7,68 @@
   },
   "routes": [
     {
-      "src": "/conf/php/(.*)",
+      "src": "^/conf/php/(.*)$",
       "dest": "/api/index.php"
     },
     {
-      "src": "/checkin/(.*)",
+      "src": "^/checkin/(.*)$",
       "dest": "/api/index.php?token=$1"
     },
     {
-      "src": "/checkin",
+      "src": "^/checkin$",
       "dest": "/api/index.php"
     },
     {
-      "src": "/student_checkin.php",
+      "src": "^/student_checkin.php$",
       "dest": "/api/index.php"
     },
     {
-      "src": "/login",
+      "src": "^/login$",
       "dest": "/pub/html/login.html"
     },
     {
-      "src": "/dashboard",
+      "src": "^/pub/html/login$",
+      "dest": "/pub/html/login.html"
+    },
+    {
+      "src": "^/dashboard$",
       "dest": "/pub/html/dashboard.html"
     },
     {
-      "src": "/sections",
+      "src": "^/pub/html/dashboard$",
+      "dest": "/pub/html/dashboard.html"
+    },
+    {
+      "src": "^/sections$",
       "dest": "/pub/html/sections.html"
     },
     {
-      "src": "/attendance_sessions",
+      "src": "^/pub/html/sections$",
+      "dest": "/pub/html/sections.html"
+    },
+    {
+      "src": "^/attendance_sessions$",
       "dest": "/pub/html/attendance_sessions.html"
     },
     {
-      "src": "/reports",
+      "src": "^/pub/html/attendance_sessions$",
+      "dest": "/pub/html/attendance_sessions.html"
+    },
+    {
+      "src": "^/reports$",
       "dest": "/pub/html/reports.html"
     },
     {
-      "src": "/settings",
+      "src": "^/pub/html/reports$",
+      "dest": "/pub/html/reports.html"
+    },
+    {
+      "src": "^/settings$",
       "dest": "/pub/html/settings.html"
     },
     {
-      "src": "/pub/html/(.*)\\.html",
-      "dest": "/pub/html/$1.html"
-    },
-    {
-      "src": "/pub/html/(.*)",
-      "dest": "/pub/html/$1.html"
+      "src": "^/pub/html/settings$",
+      "dest": "/pub/html/settings.html"
     },
     {
       "handle": "filesystem"
