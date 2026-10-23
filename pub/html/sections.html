@@ -1,0 +1,365 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sections | Smart Student Attendance</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Dashboard Stylesheet -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="app-logo-badge">
+                    <img src="../assets/logo.png" alt="Logo" style="width: 26px; height: 26px; object-fit: contain;">
+                </div>
+                <div class="app-logo-text">
+                    <span class="logo-title">Smart Attendance</span>
+                    <span class="logo-tag">QR MONITORING SYSTEM</span>
+                </div>
+            </div>
+
+            <div class="nav-category">PROFESSOR WORKSPACE</div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/dashboard.png" width="18" height="18" alt="Dashboard">
+                    </span>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+
+                <a href="sections.html" class="nav-link active">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/sections.png" width="18" height="18" alt="Sections">
+                    </span>
+                    <span class="nav-label">Sections</span>
+                </a>
+
+                <a href="attendance_sessions.html" class="nav-link">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/sessions.png" width="18" height="18" alt="Attendance Sessions">
+                    </span>
+                    <span class="nav-label">Attendance Sessions</span>
+                </a>
+
+                <a href="reports.html" class="nav-link">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/reports.png" width="18" height="18" alt="Reports">
+                    </span>
+                    <span class="nav-label">Reports</span>
+                </a>
+
+                <a href="settings.html" class="nav-link">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/settings.png" width="18" height="18" alt="Settings">
+                    </span>
+                    <span class="nav-label">Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-user-box">
+                <div class="user-avatar-pill" id="sidebarAvatar">--</div>
+                <div class="user-details-text">
+                    <span class="user-full-name" id="sidebarUserName">Loading...</span>
+                    <span class="user-faculty-id" id="sidebarFacultyId">...</span>
+                </div>
+                <a href="../../conf/php/logout.php" class="logout-btn" title="Sign out" aria-label="Sign out">
+                    <img src="../assets/icons/logout.png" width="18" height="18" alt="Sign out">
+                </a>
+            </div>
+        </aside>
+
+        <!-- MAIN WRAPPER -->
+        <div class="main-wrapper">
+            
+            <header class="topbar">
+                <div class="search-box">
+                    <input type="text" id="topSearchInput" placeholder="Search students, sections...">
+                    <button type="button" class="search-box-btn" aria-label="Search" title="Search">
+                        <img src="../assets/icons/search.png" width="15" height="15" alt="Search">
+                    </button>
+                </div>
+
+                <div class="topbar-actions">
+                    <div class="date-badge">
+                        <img src="../assets/icons/calendar.png" width="15" height="15" alt="Calendar" style="vertical-align: middle;">
+                        <span id="topbarDate">Loading date...</span>
+                    </div>
+
+                    <div class="topbar-profile">
+                        <div class="profile-avatar" id="topbarAvatar">--</div>
+                        <div class="profile-info">
+                            <span class="profile-name" id="topbarName">Loading...</span>
+                            <span class="profile-role" id="topbarRole">Faculty</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="dashboard-content">
+                
+                <div id="alertFeedback" class="alert hidden" style="padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; font-weight: 600; font-size: 13.5px;"></div>
+
+                <!-- Header Row -->
+                <div class="dashboard-hero" style="margin-bottom: 20px;">
+                    <div>
+                        <h1 style="font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">Sections</h1>
+                        <p style="font-size: 14px; color: #64748b; margin-top: 4px;">Manage your teaching sections and their official student rosters.</p>
+                    </div>
+
+                    <button class="primary-btn-qr" id="openAddSectionModal" style="background: #2563eb; padding: 10px 18px; border-radius: 10px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+                        <img src="../assets/icons/folder.png" width="18" height="18" alt="Add Section" style="vertical-align: middle;">
+                        <span>Add Section</span>
+                    </button>
+                </div>
+
+                <!-- Info Alert (Section registry snapshot) -->
+                <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 24px; color: #475569; font-size: 13px;">
+                    <div style="font-size: 12px; line-height: 1.2; color: #0f172a; font-weight: 700;">i</div>
+                    <div>
+                        <strong style="color: #0f172a; font-weight: 700;">Section registry snapshot &middot; <span id="snapshotTimestamp">Loading...</span></strong>
+                        <div style="color: #64748b; margin-top: 2px;">Sections and roster counts reflect the current masterlists in your database.</div>
+                    </div>
+                </div>
+
+                <!-- Main Sections Card (Matching User Screenshot) -->
+                <div class="card" style="padding: 28px; border-radius: 18px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);">
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <h2 style="font-size: 18px; font-weight: 700; color: #0f172a;">Your sections</h2>
+                            <p style="font-size: 13px; color: #64748b; margin-top: 4px;">
+                                <span id="sectionsCountText">0 sections</span> &middot; 
+                                <span id="studentsCountText">0 registered students</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Search Section Input -->
+                    <div class="search-box" style="max-width: 320px; margin-bottom: 24px; border: 1px solid #e2e8f0; background: #ffffff;">
+                        <input 
+                            type="text" 
+                            id="sectionSearchInput" 
+                            placeholder="Search Section..." 
+                            style="width: 100%;"
+                        >
+                        <button type="button" class="search-box-btn" aria-label="Search" title="Search">
+                            <img src="../assets/icons/search.png" width="15" height="15" alt="Search">
+                        </button>
+                    </div>
+
+                    <!-- Sections Table -->
+                    <div class="table-responsive">
+                        <table class="classes-table" id="sectionsTable">
+                            <thead>
+                                <tr>
+                                    <th style="padding: 12px 16px; font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px;">SECTION</th>
+                                    <th style="padding: 12px 16px; font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px;">CLASS SCHEDULE</th>
+                                    <th style="padding: 12px 16px; font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px;">NUMBER OF STUDENTS</th>
+                                    <th style="padding: 12px 16px; font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px;">ACTIVE SESSIONS</th>
+                                    <th style="padding: 12px 16px; font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px;">ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sectionsTableBody">
+                                <tr>
+                                    <td colspan="5" class="empty-state-cell">Loading sections from database...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Footer Note -->
+                    <div style="margin-top: 24px; font-size: 11.5px; color: #64748b; line-height: 1.5;">
+                        View Section opens that section's own masterlist directly. Student and attendance records remain separated by section.
+                    </div>
+
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal: Add Section -->
+    <div id="addSectionModal" class="modal-overlay hidden">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div>
+                    <h3 class="modal-title">Add New Section</h3>
+                    <p class="modal-subtitle">Register a teaching section to your masterlist</p>
+                </div>
+                <button type="button" class="modal-close-btn" id="closeAddSectionModal">&times;</button>
+            </div>
+            <form id="addSectionForm">
+                <input type="hidden" name="action" value="add_section">
+                <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+                    <div>
+                        <label class="modal-label">Section Name (e.g. LFCA411N123):</label>
+                        <input type="text" name="section_name" required class="modal-select" placeholder="e.g. LFCA411N123">
+                    </div>
+                    <div>
+                        <label class="modal-label">Subject Code:</label>
+                        <input type="text" name="subject_code" required class="modal-select" placeholder="e.g. IT 420">
+                    </div>
+                    <div>
+                        <label class="modal-label">Subject Title:</label>
+                        <input type="text" name="subject_name" required class="modal-select" placeholder="e.g. Systems Architecture">
+                    </div>
+                    <div>
+                        <label class="modal-label">Room:</label>
+                        <input type="text" name="room" value="Lab 304" class="modal-select">
+                    </div>
+                    <div>
+                        <label class="modal-label">Class Schedule Days (Select one or more):</label>
+                        <div class="day-picker-group" id="addDayPicker">
+                            <button type="button" class="day-chip" data-day="Monday">Mon</button>
+                            <button type="button" class="day-chip active" data-day="Tuesday">Tue</button>
+                            <button type="button" class="day-chip active" data-day="Wednesday">Wed</button>
+                            <button type="button" class="day-chip" data-day="Thursday">Thu</button>
+                            <button type="button" class="day-chip" data-day="Friday">Fri</button>
+                            <button type="button" class="day-chip" data-day="Saturday">Sat</button>
+                            <button type="button" class="day-chip" data-day="Sunday">Sun</button>
+                        </div>
+                        <input type="hidden" name="schedule_day" id="addScheduleDayInput" value="Tuesday, Wednesday">
+                        <div class="schedule-summary-text" id="addScheduleSummary">Selected: <strong style="color: #2563eb;">Tuesday, Wednesday</strong></div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label class="modal-label">Start Time:</label>
+                            <input type="time" name="start_time" value="08:00" class="modal-select">
+                        </div>
+                        <div>
+                            <label class="modal-label">End Time:</label>
+                            <input type="time" name="end_time" value="09:30" class="modal-select">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="margin-top: 20px;">
+                    <button type="button" class="btn-secondary" id="cancelAddSectionBtn">Cancel</button>
+                    <button type="submit" class="btn-primary" style="background: #2563eb;">Save Section</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Edit Section -->
+    <div id="editSectionModal" class="modal-overlay hidden">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div>
+                    <h3 class="modal-title">Update Section</h3>
+                    <p class="modal-subtitle">Modify teaching section details</p>
+                </div>
+                <button type="button" class="modal-close-btn" id="closeEditSectionModal">&times;</button>
+            </div>
+            <form id="editSectionForm">
+                <input type="hidden" name="action" value="update_section">
+                <input type="hidden" name="section_id" id="editSectionId">
+                <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+                    <div>
+                        <label class="modal-label">Section Name:</label>
+                        <input type="text" name="section_name" id="editSectionName" required class="modal-select">
+                    </div>
+                    <div>
+                        <label class="modal-label">Subject Code:</label>
+                        <input type="text" name="subject_code" id="editSubjectCode" required class="modal-select">
+                    </div>
+                    <div>
+                        <label class="modal-label">Subject Title:</label>
+                        <input type="text" name="subject_name" id="editSubjectName" required class="modal-select">
+                    </div>
+                    <div>
+                        <label class="modal-label">Room:</label>
+                        <input type="text" name="room" id="editRoom" class="modal-select">
+                    </div>
+                    <div>
+                        <label class="modal-label">Class Schedule Days (Select one or more):</label>
+                        <div class="day-picker-group" id="editDayPicker">
+                            <button type="button" class="day-chip" data-day="Monday">Mon</button>
+                            <button type="button" class="day-chip" data-day="Tuesday">Tue</button>
+                            <button type="button" class="day-chip" data-day="Wednesday">Wed</button>
+                            <button type="button" class="day-chip" data-day="Thursday">Thu</button>
+                            <button type="button" class="day-chip" data-day="Friday">Fri</button>
+                            <button type="button" class="day-chip" data-day="Saturday">Sat</button>
+                            <button type="button" class="day-chip" data-day="Sunday">Sun</button>
+                        </div>
+                        <input type="hidden" name="schedule_day" id="editScheduleDay" value="Monday">
+                        <div class="schedule-summary-text" id="editScheduleSummary">Selected: <strong style="color: #2563eb;">Monday</strong></div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label class="modal-label">Start Time:</label>
+                            <input type="time" name="start_time" id="editStartTime" class="modal-select">
+                        </div>
+                        <div>
+                            <label class="modal-label">End Time:</label>
+                            <input type="time" name="end_time" id="editEndTime" class="modal-select">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="margin-top: 20px;">
+                    <button type="button" class="btn-secondary" id="cancelEditSectionBtn">Cancel</button>
+                    <button type="submit" class="btn-primary" style="background: #2563eb;">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Delete Section Confirmation -->
+    <div id="deleteSectionModal" class="modal-overlay hidden">
+        <div class="modal-dialog" style="max-width: 420px;">
+            <div class="modal-header">
+                <div>
+                    <h3 class="modal-title" style="color: #dc2626;">Delete Section</h3>
+                    <p class="modal-subtitle">Are you sure you want to delete this section?</p>
+                </div>
+                <button type="button" class="modal-close-btn" id="closeDeleteSectionModal">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px 0;">
+                <p style="font-size: 13.5px; color: #475569; line-height: 1.5;">
+                    This will remove <strong id="deleteSectionTargetName" style="color: #0f172a;"></strong> from your active teaching list. Historical student attendance records will remain preserved in the system.
+                </p>
+                <input type="hidden" id="deleteSectionId">
+            </div>
+            <div class="modal-footer" style="margin-top: 10px;">
+                <button type="button" class="btn-secondary" id="cancelDeleteSectionBtn">Cancel</button>
+                <button type="button" class="btn-primary" id="confirmDeleteSectionBtn" style="background: #dc2626;">Yes, Delete Section</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Schedule Conflict Warning -->
+    <div id="scheduleConflictModal" class="modal-overlay hidden" style="z-index: 1050;">
+        <div class="modal-dialog" style="max-width: 440px; text-align: center; padding: 28px 24px;">
+            <div style="width: 56px; height: 56px; border-radius: 50%; background: #fef2f2; border: 2px solid #fee2e2; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+            </div>
+            <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">Schedule Conflict Detected</h3>
+            <p id="scheduleConflictMessage" style="font-size: 13.5px; color: #475569; line-height: 1.5; margin-bottom: 22px;">
+                Hindi maaaring i-save ang schedule na ito dahil may kasabay nang section sa parehong araw at oras.
+            </p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button type="button" class="btn-primary" id="closeConflictModalBtn" style="background: #2563eb; padding: 10px 24px; border-radius: 10px; font-weight: 700; width: 100%;">
+                    I-adjust ang Oras / Araw
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/sections.js"></script>
+    <script src="../js/mobile_nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /SmartStudent_Attendance/
+
+    # Clean page URLs: /pub/html/login.html becomes /pub/html/login
+    # Keep the .html files as the backing pages so existing relative assets and
+    # links continue to resolve from the same directory.
+    RewriteCond %{THE_REQUEST} \s/+SmartStudent_Attendance/(pub/html/[A-Za-z0-9_-]+)\.html(?:[?\s]) [NC]
+    RewriteRule ^pub/html/([A-Za-z0-9_-]+)\.html$ pub/html/$1 [R=301,L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{DOCUMENT_ROOT}/SmartStudent_Attendance/pub/html/$1.html -f
+    RewriteRule ^pub/html/([A-Za-z0-9_-]+)/?$ pub/html/$1.html [END]
+
+    # Canonical redirect: Hide student_checkin.php?token=XXXXX by redirecting to /checkin/XXXXX
+    RewriteCond %{THE_REQUEST} \s/+(?:SmartStudent_Attendance/)?student_checkin\.php\?token=([A-Za-z0-9_-]+)\s [NC]
+    RewriteRule ^student_checkin\.php$ checkin/%1? [R=302,L]
+
+    # Clean Check-in URL with Token: /checkin/QR-XXXXX -> student_checkin.php?token=QR-XXXXX
+    RewriteRule ^checkin/([A-Za-z0-9_-]+)/?$ student_checkin.php?token=$1 [QSA,L]
+
+    # General /checkin -> student_checkin.php
+    RewriteRule ^checkin/?$ student_checkin.php [QSA,L]
+</IfModule>
+

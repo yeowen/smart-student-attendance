@@ -1,0 +1,54 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/index.php": {
+      "runtime": "vercel-php@0.9.0"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/checkin/:token",
+      "destination": "/api/index.php?token=:token"
+    },
+    {
+      "source": "/checkin",
+      "destination": "/api/index.php"
+    },
+    {
+      "source": "/student_checkin.php",
+      "destination": "/api/index.php"
+    },
+    {
+      "source": "/conf/php/:path*",
+      "destination": "/api/index.php"
+    },
+    {
+      "source": "/login",
+      "destination": "/pub/html/login.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/pub/html/dashboard.html"
+    },
+    {
+      "source": "/sections",
+      "destination": "/pub/html/sections.html"
+    },
+    {
+      "source": "/attendance_sessions",
+      "destination": "/pub/html/attendance_sessions.html"
+    },
+    {
+      "source": "/reports",
+      "destination": "/pub/html/reports.html"
+    },
+    {
+      "source": "/settings",
+      "destination": "/pub/html/settings.html"
+    },
+    {
+      "source": "/pub/html/:page",
+      "destination": "/pub/html/:page.html"
+    }
+  ]
+}

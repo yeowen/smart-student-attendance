@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "student_number": true,
+    "full_name": true,
+    "course": true,
+    "year_level": true,
+    "email": false,
+    "remarks": false
+  },
+  "custom_fields": [
+    {
+      "label": "Uniform Verification Photo",
+      "type": "image",
+      "required": true
+    }
+  ],
+  "settings": {
+    "confirm": true,
+    "success_page": true,
+    "block_duplicate": true,
+    "masterlist_only": true
+  }
+}

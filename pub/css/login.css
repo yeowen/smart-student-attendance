@@ -1,0 +1,722 @@
+/* Faculty Login Page Styles - Smart Student Attendance System */
+:root {
+    --primary: #0d8ae5;
+    --primary-hover: #087acb;
+    --primary-dark: #0368b6;
+    --primary-light: #38bdf8;
+    --primary-glow: rgba(13, 138, 229, 0.35);
+    
+    --bg-page: #f0f7fe;
+    --card-bg: #ffffff;
+    
+    --text-heading: #1e293b;
+    --text-body: #334155;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    
+    --border-color: #e2e8f0;
+    --border-focus: #0d8ae5;
+    
+    --radius-card: 28px;
+    --radius-input: 12px;
+    --radius-btn: 12px;
+    
+    --shadow-card: 0 24px 64px rgba(13, 138, 229, 0.12), 0 4px 16px rgba(0, 0, 0, 0.02);
+    --shadow-btn: 0 10px 24px rgba(13, 138, 229, 0.32);
+    --shadow-btn-hover: 0 14px 28px rgba(13, 138, 229, 0.45);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-page);
+    color: var(--text-body);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Ambient Background Lighting & Dots */
+.ambient-glow {
+    position: fixed;
+    width: 650px;
+    height: 650px;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0.45;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.glow-top-left {
+    top: -220px;
+    left: -180px;
+    background: radial-gradient(circle, #38bdf8 0%, rgba(13, 138, 229, 0) 70%);
+}
+
+.glow-bottom-right {
+    bottom: -220px;
+    right: -180px;
+    background: radial-gradient(circle, #60a5fa 0%, rgba(37, 99, 235, 0) 70%);
+}
+
+.bg-pattern {
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(rgba(13, 138, 229, 0.1) 1.2px, transparent 1.2px);
+    background-size: 26px 26px;
+    opacity: 0.7;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Card Wrapper & Responsive Layout */
+.login-page-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1100px;
+    animation: cardEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.login-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    display: flex;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    min-height: 640px;
+}
+
+/* ===================================================
+   LEFT BRANDING PANEL
+   =================================================== */
+.brand-panel {
+    flex: 1 1 48%;
+    background: linear-gradient(150deg, #138de6 0%, #0d7ecb 50%, #086eb7 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 46px 44px;
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+}
+
+/* Concentric Wave Decorative Rings */
+.wave-shape {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+}
+
+.wave-1 {
+    width: 600px;
+    height: 600px;
+    bottom: -180px;
+    right: -180px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+}
+
+.wave-2 {
+    width: 820px;
+    height: 820px;
+    bottom: -290px;
+    right: -290px;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.wave-3 {
+    width: 1050px;
+    height: 1050px;
+    bottom: -410px;
+    right: -410px;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.brand-panel-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Brand Header / Logo */
+.brand-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-logo-icon {
+    width: 44px;
+    height: 44px;
+    background: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.brand-logo-icon img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    display: block;
+}
+
+.brand-header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-name {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.2px;
+}
+
+.brand-subname {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: #bae0ff;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+/* Smarter Class Management Pill */
+.feature-pill {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    margin-top: 28px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(8px);
+}
+
+.pill-sparkle {
+    font-size: 10px;
+    color: #ffffff;
+}
+
+/* Hero Typography */
+.hero-title {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.22;
+    letter-spacing: -0.6px;
+    margin-bottom: 16px;
+    color: #ffffff;
+}
+
+.hero-description {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.86);
+    margin-bottom: 32px;
+    max-width: 420px;
+}
+
+/* Feature Checkmark List */
+.features-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 36px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.feature-icon-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Brand Panel Footer */
+.panel-footer {
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+.panel-footer p {
+    font-size: 11.5px;
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.4;
+}
+
+/* ===================================================
+   RIGHT LOGIN FORM PANEL
+   =================================================== */
+.form-panel {
+    flex: 1 1 52%;
+    background: #ffffff;
+    padding: 52px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-panel-content {
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+}
+
+/* Welcome Header with Avatar */
+.welcome-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.avatar-badge {
+    width: 48px;
+    height: 48px;
+    background: #eef6fd;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.welcome-texts {
+    display: flex;
+    flex-direction: column;
+}
+
+.welcome-title {
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--text-heading);
+    letter-spacing: -0.3px;
+    line-height: 1.25;
+}
+
+.welcome-subtitle {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+/* Form Styles */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-body);
+    margin-bottom: 8px;
+}
+
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+/* Input Wrapper & Controls */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-input);
+    background: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.input-wrapper:hover {
+    border-color: #cbd5e1;
+}
+
+.input-wrapper:focus-within {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3.5px rgba(13, 138, 229, 0.14);
+}
+
+.input-wrapper.error {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3.5px rgba(239, 68, 68, 0.12);
+}
+
+.input-icon.left-icon {
+    position: absolute;
+    left: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.form-control {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px 0 44px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-heading);
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+.form-control.with-right-icon {
+    padding-right: 44px;
+}
+
+.form-control::placeholder {
+    color: var(--text-light);
+    font-weight: 400;
+}
+
+.toggle-password-btn {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.15s ease;
+}
+
+.toggle-password-btn:hover {
+    background: #f1f5f9;
+}
+
+.toggle-password-btn:hover svg {
+    stroke: var(--primary);
+}
+
+.field-error {
+    font-size: 12px;
+    color: #ef4444;
+    font-weight: 500;
+    margin-top: 5px;
+    display: none;
+}
+
+.field-error.visible {
+    display: block;
+}
+
+/* Checkbox Customization */
+.checkbox-group {
+    margin-top: -4px;
+}
+
+.custom-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    background-color: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+.custom-checkbox:hover input ~ .checkmark {
+    border-color: var(--primary);
+}
+
+.custom-checkbox input:checked ~ .checkmark {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 5.5px;
+    top: 2px;
+    width: 4.5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.custom-checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-label {
+    font-size: 13px;
+    color: var(--text-body);
+    font-weight: 500;
+}
+
+/* Submit Button */
+.submit-btn {
+    width: 100%;
+    height: 50px;
+    background: var(--primary);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-btn);
+    font-size: 14.5px;
+    font-weight: 600;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: var(--shadow-btn);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-top: 4px;
+}
+
+.submit-btn:hover {
+    background: var(--primary-hover);
+    box-shadow: var(--shadow-btn-hover);
+    transform: translateY(-1.5px);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+.submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Spinner inside button */
+.btn-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+/* Need Access Help Text */
+.help-text {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+.admin-link {
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.admin-link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* Protected and Encrypted Badge */
+.security-badge-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.security-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #64748b;
+    padding: 6px 14px;
+    background: #f8fafc;
+    border-radius: 999px;
+    border: 1px solid #f1f5f9;
+}
+
+/* Toast Notifications */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #1e293b;
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    animation: toastSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.toast.toast-success {
+    background: #0f766e;
+}
+
+.toast.toast-error {
+    background: #b91c1c;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Animations */
+@keyframes cardEntrance {
+    0% {
+        opacity: 0;
+        transform: scale(0.96) translateY(14px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes toastSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 960px) {
+    .login-card {
+        flex-direction: column;
+        max-width: 580px;
+        min-height: auto;
+    }
+
+    .brand-panel {
+        padding: 40px 32px 36px;
+    }
+
+    .hero-title {
+        font-size: 26px;
+    }
+
+    .form-panel {
+        padding: 40px 32px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 12px;
+    }
+
+    .login-card {
+        border-radius: 20px;
+    }
+
+    .brand-panel {
+        padding: 30px 22px;
+    }
+
+    .hero-title {
+        font-size: 22px;
+    }
+
+    .form-panel {
+        padding: 32px 20px;
+    }
+
+    .welcome-header {
+        flex-direction: row;
+        gap: 12px;
+    }
+
+    .avatar-badge {
+        width: 42px;
+        height: 42px;
+    }
+
+    .welcome-title {
+        font-size: 19px;
+    }
+}

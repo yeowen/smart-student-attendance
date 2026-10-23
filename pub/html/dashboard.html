@@ -1,0 +1,314 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard | Smart Attendance QR System</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Dashboard Stylesheet -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="app-logo-badge">
+                    <img src="../assets/logo.png" alt="Logo" style="width: 26px; height: 26px; object-fit: contain;">
+                </div>
+                <div class="app-logo-text">
+                    <span class="logo-title">Smart Attendance</span>
+                    <span class="logo-tag">QR MONITORING SYSTEM</span>
+                </div>
+            </div>
+
+            <div class="nav-category">PROFESSOR WORKSPACE</div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link active">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/dashboard.png" width="18" height="18" alt="Dashboard">
+                    </span>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+
+                <a href="sections.html" class="nav-link">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/sections.png" width="18" height="18" alt="Sections">
+                    </span>
+                    <span class="nav-label">Sections</span>
+                </a>
+
+                <a href="attendance_sessions.html" class="nav-link">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/sessions.png" width="18" height="18" alt="Attendance Sessions">
+                    </span>
+                    <span class="nav-label">Attendance Sessions</span>
+                </a>
+
+                <a href="reports.html" class="nav-link">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/reports.png" width="18" height="18" alt="Reports">
+                    </span>
+                    <span class="nav-label">Reports</span>
+                </a>
+
+                <a href="settings.html" class="nav-link">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/settings.png" width="18" height="18" alt="Settings">
+                    </span>
+                    <span class="nav-label">Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-user-box">
+                <div class="user-avatar-pill" id="sidebarAvatar">--</div>
+                <div class="user-details-text">
+                    <span class="user-full-name" id="sidebarUserName">Loading...</span>
+                    <span class="user-faculty-id" id="sidebarFacultyId">...</span>
+                </div>
+                <a href="../../conf/php/logout.php" class="logout-btn" title="Sign out" aria-label="Sign out">
+                    <img src="../assets/icons/logout.png" width="18" height="18" alt="Sign out">
+                </a>
+            </div>
+        </aside>
+
+        <!-- MAIN WRAPPER -->
+        <div class="main-wrapper">
+            
+            <header class="topbar">
+                <div class="search-box">
+                    <input type="text" id="globalSearchInput" placeholder="Search students, sections...">
+                    <button type="button" class="search-box-btn" aria-label="Search" title="Search">
+                        <img src="../assets/icons/search.png" width="15" height="15" alt="Search">
+                    </button>
+                </div>
+
+                <div class="topbar-actions">
+                    <div class="date-badge">
+                        <img src="../assets/icons/calendar.png" width="16" height="16" alt="Date" style="vertical-align: middle;">
+                        <span id="topbarDate">Loading date...</span>
+                    </div>
+
+                    <div class="topbar-profile">
+                        <div class="profile-avatar" id="topbarAvatar">--</div>
+                        <div class="profile-info">
+                            <span class="profile-name" id="topbarName">Loading...</span>
+                            <span class="profile-role" id="topbarRole">Faculty</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="dashboard-content">
+                
+                <!-- Hero Header -->
+                <section class="dashboard-hero">
+                    <div class="hero-text-block">
+                        <span class="hero-date-tag" id="heroDateTag">TODAY</span>
+                        <h1 class="hero-greeting" id="heroGreeting">Good day, Professor</h1>
+                        <p class="hero-subtext">Here's what's happening with your classes today.</p>
+                    </div>
+                </section>
+
+                <!-- 4 Metrics Stat Cards (Populated Dynamically via API) -->
+                <section class="stats-grid">
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-icon-wrapper bg-blue-subtle">
+                                <img src="../assets/icons/folder.png" width="22" height="22" alt="Active sections">
+                            </div>
+                            <span class="stat-card-title">Active sections</span>
+                            <a href="sections.html" class="chevron-link">&rsaquo;</a>
+                        </div>
+                        <div class="stat-card-body">
+                            <span class="stat-number" id="metricActiveSections">0</span>
+                            <span class="stat-subtext" id="metricTodayScheduled">0 classes scheduled today</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-icon-wrapper bg-teal-subtle">
+                                <img src="../assets/icons/students.png" width="22" height="22" alt="Total students">
+                            </div>
+                            <span class="stat-card-title">Total students</span>
+                            <a href="sections.html" class="chevron-link">&rsaquo;</a>
+                        </div>
+                        <div class="stat-card-body">
+                            <span class="stat-number" id="metricTotalStudents">0</span>
+                            <span class="stat-subtext" id="metricSectionsSummary">Across registered sections</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-icon-wrapper bg-green-subtle">
+                                <img src="../assets/icons/attendance.png" width="22" height="22" alt="Today's attendance">
+                            </div>
+                            <span class="stat-card-title">Today's attendance</span>
+                            <span class="chevron-link">&rsaquo;</span>
+                        </div>
+                        <div class="stat-card-body">
+                            <span class="stat-number" id="metricTodayAttendance">0%</span>
+                            <span class="stat-subtext" id="metricPresentCount">0 students recorded</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-icon-wrapper bg-purple-subtle">
+                                <img src="../assets/icons/clock.png" width="22" height="22" alt="Active session">
+                            </div>
+                            <span class="stat-card-title">Active session</span>
+                            <a href="attendance_sessions.html" class="chevron-link">&rsaquo;</a>
+                        </div>
+                        <div class="stat-card-body">
+                            <span class="stat-number" id="metricActiveSessions">0</span>
+                            <span class="stat-subtext" id="metricActiveSessionDesc">No active sessions</span>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- Middle Section: Weekly Chart + Quick Actions -->
+                <section class="middle-grid">
+                    
+                    <div class="card chart-card">
+                        <div class="card-header-row">
+                            <div>
+                                <h2 class="card-title">Weekly attendance</h2>
+                                <p class="card-subtitle">Average attendance across all sections</p>
+                            </div>
+                            <div class="dropdown-filter">
+                                <span>This week</span>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polyline points="6 9 12 15 18 9"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="chart-summary-stat">
+                            <span class="chart-big-number" id="weeklyAverageNumber">0%</span>
+                            <span class="trend-badge">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polyline points="18 15 12 9 6 15"/>
+                                </svg>
+                                Database average
+                            </span>
+                        </div>
+
+                        <div class="barchart-wrapper">
+                            <div class="chart-y-axis">
+                                <span>100%</span>
+                                <span>75%</span>
+                                <span>50%</span>
+                                <span>25%</span>
+                                <span>0%</span>
+                            </div>
+                            <div class="chart-bars-area">
+                                <div class="grid-line" style="bottom: 100%;"></div>
+                                <div class="grid-line" style="bottom: 75%;"></div>
+                                <div class="grid-line" style="bottom: 50%;"></div>
+                                <div class="grid-line" style="bottom: 25%;"></div>
+                                <div class="grid-line" style="bottom: 0%;"></div>
+
+                                <div class="bars-container" id="weeklyBarsContainer">
+                                    <!-- Dynamic bars rendered via dashboard.js -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card quick-actions-card">
+                        <div class="card-header-row">
+                            <div>
+                                <h2 class="card-title">Quick actions</h2>
+                                <p class="card-subtitle">Common faculty tasks</p>
+                            </div>
+                        </div>
+
+                        <div class="actions-list">
+                            <a href="sections.html" class="action-item">
+                                <div class="action-icon-pill bg-teal-light">
+                                    <img src="../assets/icons/sections.png" width="20" height="20" alt="Sections">
+                                </div>
+                                <div class="action-texts">
+                                    <span class="action-title">Manage sections</span>
+                                    <span class="action-desc">Update your class masterlists</span>
+                                </div>
+                                <span class="action-arrow">&rsaquo;</span>
+                            </a>
+
+                            <a href="attendance_sessions.html" class="action-item">
+                                <div class="action-icon-pill bg-blue-light">
+                                    <img src="../assets/icons/sessions.png" width="20" height="20" alt="Attendance">
+                                </div>
+                                <div class="action-texts">
+                                    <span class="action-title">Attendance sessions</span>
+                                    <span class="action-desc">Monitor live and past QR scans</span>
+                                </div>
+                                <span class="action-arrow">&rsaquo;</span>
+                            </a>
+
+                            <a href="reports.html" class="action-item">
+                                <div class="action-icon-pill bg-purple-light">
+                                    <img src="../assets/icons/excel.png" width="20" height="20" alt="Export">
+                                </div>
+                                <div class="action-texts">
+                                    <span class="action-title">Export records</span>
+                                    <span class="action-desc">Download attendance reports</span>
+                                </div>
+                                <span class="action-arrow">&rsaquo;</span>
+                            </a>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- Bottom Section: Today's Classes Table -->
+                <section class="card classes-card">
+                    <div class="card-header-row">
+                        <div>
+                            <h2 class="card-title">Today's classes</h2>
+                            <p class="card-subtitle">Your schedule and attendance status</p>
+                        </div>
+                        <a href="sections.html" class="link-view-all">View all sections &rsaquo;</a>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="classes-table" id="classesTable">
+                            <thead>
+                                <tr>
+                                    <th>SECTION & SUBJECT</th>
+                                    <th>SCHEDULE</th>
+                                    <th>STUDENTS</th>
+                                    <th>STATUS</th>
+                                    <th>ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="todayClassesTableBody">
+                                <tr>
+                                    <td colspan="5" class="empty-state-cell">Loading classes from database...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/mobile_nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Login | Smart Student Attendance and Monitoring System</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Login Stylesheet -->
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+    <!-- Ambient Background Lighting & Subtle Pattern -->
+    <div class="ambient-glow glow-top-left"></div>
+    <div class="ambient-glow glow-bottom-right"></div>
+    <div class="bg-pattern"></div>
+
+    <div class="login-page-wrapper">
+        <div class="login-card">
+            
+            <!-- LEFT PANEL: Brand & Features Overview -->
+            <section class="brand-panel">
+                <!-- Decorative concentric wave rings -->
+                <div class="wave-shape wave-1"></div>
+                <div class="wave-shape wave-2"></div>
+                <div class="wave-shape wave-3"></div>
+
+                <div class="brand-panel-content">
+                    <!-- Top Logo Header -->
+                    <div class="brand-header">
+                        <div class="brand-logo-icon">
+                            <img src="../assets/logo.png" alt="Smart Attendance Logo" style="width: 32px; height: 32px; object-fit: contain;">
+                        </div>
+                        <div class="brand-header-text">
+                            <span class="brand-name">Smart Attendance</span>
+                            <span class="brand-subname">QR MONITORING SYSTEM</span>
+                        </div>
+                    </div>
+
+                    <!-- Pill Badge -->
+                    <div class="feature-pill">
+                        <span class="pill-sparkle">✦</span>
+                        <span>SMARTER CLASS MANAGEMENT</span>
+                    </div>
+
+                    <!-- Main Hero Typography -->
+                    <h1 class="hero-title">
+                        Smart Student<br>
+                        Attendance and<br>
+                        Monitoring System<br>
+                        Using QR Code
+                    </h1>
+
+                    <p class="hero-description">
+                        Sign in to manage your classes, generate attendance QR codes, and keep every record organized.
+                    </p>
+
+                    <!-- Feature Bullet Points -->
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <div class="feature-icon-circle">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <span>Secure faculty access</span>
+                        </li>
+                        <li class="feature-item">
+                            <div class="feature-icon-circle">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <span>Real-time attendance insights</span>
+                        </li>
+                        <li class="feature-item">
+                            <div class="feature-icon-circle">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <span>Automated class records</span>
+                        </li>
+                    </ul>
+
+                    <!-- Copyright Notice -->
+                    <div class="panel-footer">
+                        <p>© <span id="copyrightYear">2026</span> Smart Student Attendance and Monitoring System Using QR Code</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT PANEL: Professor Login Form -->
+            <section class="form-panel">
+                <div class="form-panel-content">
+                    
+                    <!-- Avatar & Welcome Title -->
+                    <div class="welcome-header">
+                        <div class="avatar-badge">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0d8ae5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                        <div class="welcome-texts">
+                            <h2 class="welcome-title" id="greetingTitle">Welcome back</h2>
+                            <p class="welcome-subtitle">Enter your account details to continue</p>
+                        </div>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="loginForm" class="login-form" novalidate>
+                        
+                        <!-- Faculty ID or Email Field -->
+                        <div class="form-group">
+                            <label for="facultyId" class="form-label">Faculty ID or email address</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon left-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="20" height="16" x="2" y="4" rx="2"/>
+                                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                                    </svg>
+                                </span>
+                                <input 
+                                    type="text" 
+                                    id="facultyId" 
+                                    name="facultyId" 
+                                    class="form-control" 
+                                    placeholder="e.g. faculty@school.edu" 
+                                    autocomplete="username"
+                                    required
+                                >
+                            </div>
+                            <span class="field-error" id="facultyIdError"></span>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="form-group">
+                            <div class="label-row">
+                                <label for="password" class="form-label">Password</label>
+                            </div>
+                            <div class="input-wrapper">
+                                <span class="input-icon left-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                </span>
+                                <input 
+                                    type="password" 
+                                    id="password" 
+                                    name="password" 
+                                    class="form-control with-right-icon" 
+                                    placeholder="Enter your password" 
+                                    autocomplete="current-password"
+                                    required
+                                >
+                                <button type="button" id="togglePasswordBtn" class="toggle-password-btn" aria-label="Toggle password visibility">
+                                    <!-- Eye Open Icon -->
+                                    <svg id="eyeOpenIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <!-- Eye Closed / Off Icon (Hidden by default) -->
+                                    <svg id="eyeSlashIcon" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                                        <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                                        <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                                        <line x1="2" x2="22" y1="2" y2="22"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <span class="field-error" id="passwordError"></span>
+                        </div>
+
+                        <!-- Keep me signed in Checkbox -->
+                        <div class="checkbox-group">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" id="rememberMe" name="rememberMe">
+                                <span class="checkmark"></span>
+                                <span class="checkbox-label">Keep me signed in on this device</span>
+                            </label>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" id="submitBtn" class="submit-btn">
+                            <span class="btn-spinner hidden" id="btnSpinner"></span>
+                            <span class="btn-icon" id="btnLockIcon">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                            </span>
+                            <span id="btnText">Sign in to dashboard</span>
+                        </button>
+
+                        
+
+                        <!-- Encrypted Security Tag -->
+                        <div class="security-badge-wrapper">
+                            <div class="security-badge">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 6 9 17l-5-5"/>
+                                </svg>
+                                <span>Your access is protected and encrypted</span>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Alert / Toast Notification -->
+    <div id="toastNotification" class="toast hidden">
+        <span class="toast-icon" id="toastIcon"></span>
+        <span class="toast-message" id="toastMessage"></span>
+    </div>
+
+    <!-- Login JavaScript -->
+    <script src="../js/login.js"></script>
+</body>
+</html>

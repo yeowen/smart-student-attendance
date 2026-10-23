@@ -1,0 +1,401 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Reports | Smart Student Attendance</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Dashboard Stylesheet -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="app-logo-badge">
+                    <img src="../assets/logo.png" alt="Logo" style="width: 26px; height: 26px; object-fit: contain;">
+                </div>
+                <div class="app-logo-text">
+                    <span class="logo-title">Smart Attendance</span>
+                    <span class="logo-tag">QR MONITORING SYSTEM</span>
+                </div>
+            </div>
+
+            <div class="nav-category">PROFESSOR WORKSPACE</div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/dashboard.png" width="18" height="18" alt="Dashboard">
+                    </span>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+
+                <a href="sections.html" class="nav-link">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/sections.png" width="18" height="18" alt="Sections">
+                    </span>
+                    <span class="nav-label">Sections</span>
+                </a>
+
+                <a href="attendance_sessions.html" class="nav-link">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/sessions.png" width="18" height="18" alt="Attendance Sessions">
+                    </span>
+                    <span class="nav-label">Attendance Sessions</span>
+                </a>
+
+                <a href="reports.html" class="nav-link active">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/reports.png" width="18" height="18" alt="Reports">
+                    </span>
+                    <span class="nav-label">Reports</span>
+                </a>
+
+                <a href="settings.html" class="nav-link">
+                    <span class="nav-icon">
+                        <img src="../assets/icons/settings.png" width="18" height="18" alt="Settings">
+                    </span>
+                    <span class="nav-label">Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-user-box">
+                <div class="user-avatar-pill" id="sidebarAvatar">--</div>
+                <div class="user-details-text">
+                    <span class="user-full-name" id="sidebarUserName">Loading...</span>
+                    <span class="user-faculty-id" id="sidebarFacultyId">...</span>
+                </div>
+                <a href="../../conf/php/logout.php" class="logout-btn" title="Sign out" aria-label="Sign out">
+                    <img src="../assets/icons/logout.png" width="18" height="18" alt="Sign out">
+                </a>
+            </div>
+        </aside>
+
+        <!-- MAIN WRAPPER -->
+        <div class="main-wrapper">
+            
+            <header class="topbar">
+                <div class="search-box">
+                    <input type="text" id="topSearchInput" placeholder="Search report records...">
+                    <button type="button" class="search-box-btn" aria-label="Search" title="Search">
+                        <img src="../assets/icons/search.png" width="15" height="15" alt="Search">
+                    </button>
+                </div>
+
+                <div class="topbar-actions">
+                    <div class="date-badge">
+                        <img src="../assets/icons/calendar.png" width="15" height="15" alt="Calendar" style="vertical-align: middle;">
+                        <span id="topbarDate">Loading date...</span>
+                    </div>
+
+                    <div class="topbar-profile">
+                        <div class="profile-avatar" id="topbarAvatar">--</div>
+                        <div class="profile-info">
+                            <span class="profile-name" id="topbarName">Loading...</span>
+                            <span class="profile-role" id="topbarRole">Faculty</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="dashboard-content">
+                
+                <div id="alertFeedback" class="alert hidden" style="padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; font-weight: 600; font-size: 13.5px;"></div>
+
+                <!-- Header Row with Download & Print at the Top -->
+                <div class="dashboard-hero" style="margin-bottom: 22px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;">
+                    <div>
+                        <h1 style="font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">Attendance Reports</h1>
+                        <p style="font-size: 14px; color: #64748b; margin-top: 4px;">Official class attendance rosters, real-time records, and export tools.</p>
+                    </div>
+
+                    <!-- Top Action Buttons (Download per section) -->
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button type="button" class="btn-print-report" id="printReportBtn" title="Print attendance report">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 6 2 18 2 18 9"/>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                                <rect width="12" height="8" x="6" y="14"/>
+                            </svg>
+                            <span>Print Report</span>
+                        </button>
+
+                        <button type="button" class="btn-download-report" id="downloadCsvBtn" title="Download official CSV report">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            <span>Download CSV Report</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section Selector / Schedules Cards (Click to load section) -->
+                <div style="margin-bottom: 14px;">
+                    <span style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.6px; display: block; margin-bottom: 10px;">Select Teaching Section with Schedule:</span>
+                    <div id="sectionCardsContainer" class="report-section-cards">
+                        <!-- Populated dynamically via JS -->
+                        <div style="color: #94a3b8; font-size: 13px;">Loading teaching sections...</div>
+                    </div>
+                </div>
+
+                <!-- Main Card: Selected Section Attendance Roster -->
+                <div id="reportDetailPanel" class="card" style="display: none; padding: 24px; border-radius: 18px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);">
+                    
+                    <!-- Section Meta Header & Session Selector -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; margin-bottom: 20px;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <h2 id="currentSectionTitle" style="font-size: 20px; font-weight: 800; color: #0f172a; margin: 0;">--</h2>
+                                <span id="currentSubjectCode" style="font-size: 12px; font-weight: 700; color: #2563eb; background: #eff6ff; padding: 4px 10px; border-radius: 6px; border: 1px solid #dbeafe;">--</span>
+                            </div>
+                            <div id="currentScheduleDetails" style="font-size: 13px; color: #64748b; margin-top: 5px; display: flex; align-items: center; gap: 6px;">
+                                <span>Loading schedule details...</span>
+                            </div>
+                        </div>
+
+                        <!-- Session / Date Filter + Close Button -->
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <label for="sessionSelectDropdown" style="font-size: 13px; font-weight: 600; color: #475569; white-space: nowrap;">Session Date:</label>
+                            <select id="sessionSelectDropdown" class="modal-select" style="min-width: 220px; height: 40px; font-weight: 600;">
+                                <!-- Populated dynamically via JS -->
+                            </select>
+                            <button id="closeDetailPanelBtn" type="button" title="Close panel"
+                                style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid #e2e8f0; background: #f8fafc; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s, color 0.15s;"
+                                onmouseover="this.style.background='#fee2e2';this.style.color='#dc2626';this.style.borderColor='#fecaca';"
+                                onmouseout="this.style.background='#f8fafc';this.style.color='#64748b';this.style.borderColor='#e2e8f0';">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Summary Pills -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 22px;">
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 16px;">
+                            <span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Total Students</span>
+                            <div id="statTotalStudents" style="font-size: 22px; font-weight: 800; color: #0f172a; margin-top: 4px;">0</div>
+                        </div>
+
+                        <div style="background: #ecfdf5; border: 1px solid #bbf7d0; border-radius: 12px; padding: 14px 16px;">
+                            <span style="font-size: 11px; font-weight: 700; color: #059669; text-transform: uppercase;">Present</span>
+                            <div id="statPresentStudents" style="font-size: 22px; font-weight: 800; color: #059669; margin-top: 4px;">0</div>
+                        </div>
+
+                        <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 14px 16px;">
+                            <span style="font-size: 11px; font-weight: 700; color: #d97706; text-transform: uppercase;">Late</span>
+                            <div id="statLateStudents" style="font-size: 22px; font-weight: 800; color: #d97706; margin-top: 4px;">0</div>
+                        </div>
+
+                        <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 14px 16px;">
+                            <span style="font-size: 11px; font-weight: 700; color: #dc2626; text-transform: uppercase;">Absent</span>
+                            <div id="statAbsentStudents" style="font-size: 22px; font-weight: 800; color: #dc2626; margin-top: 4px;">0</div>
+                        </div>
+
+                        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 14px 16px;">
+                            <span style="font-size: 11px; font-weight: 700; color: #2563eb; text-transform: uppercase;">Attendance Rate</span>
+                            <div id="statAttendanceRate" style="font-size: 22px; font-weight: 800; color: #2563eb; margin-top: 4px;">0%</div>
+                        </div>
+                    </div>
+
+                    <!-- Search and Status Quick Filters -->
+                    <div class="section-filters-bar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;">
+                        <div class="search-box" style="min-width: 260px; max-width: 380px; flex: 1; border: 1px solid #cbd5e1; background: #ffffff;">
+                            <input type="text" id="studentSearchFilter" placeholder="Search student name or student number..." style="width: 100%;">
+                            <button type="button" class="search-box-btn" aria-label="Search" title="Search">
+                                <img src="../assets/icons/search.png" width="15" height="15" alt="Search">
+                            </button>
+                        </div>
+
+                        <!-- Status filter pills -->
+                        <div style="display: flex; gap: 6px;" id="statusFilterButtonGroup">
+                            <button type="button" class="table-action-btn active-filter" data-status="all" style="background: #2563eb; color: #ffffff; border-color: #2563eb;">All</button>
+                            <button type="button" class="table-action-btn" data-status="present">Present</button>
+                            <button type="button" class="table-action-btn" data-status="late">Late</button>
+                            <button type="button" class="table-action-btn" data-status="absent">Absent</button>
+                        </div>
+                    </div>
+
+                    <!-- Attendance Table in Alphabetical Order -->
+                    <div class="table-responsive">
+                        <table class="classes-table" id="reportsTable">
+                            <thead>
+                                <tr>
+                                    <th style="padding: 14px 16px; font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px; width: 45px;">#</th>
+                                    <th style="padding: 14px 16px; font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px;">STUDENT NAME (A-Z)</th>
+                                    <th style="padding: 14px 16px; font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px;">STUDENT NUMBER</th>
+                                    <th style="padding: 14px 16px; font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px;">EMAIL</th>
+                                    <th style="padding: 14px 16px; font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px;">STATUS</th>
+                                    <th style="padding: 14px 16px; font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px;">SCANNED TIME</th>
+                                    <th style="padding: 14px 16px; font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px;">UNIFORM PHOTO</th>
+                                    <th style="padding: 14px 16px; font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px;">ADJUST STATUS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportsTableBody">
+                                <tr>
+                                    <td colspan="8" class="empty-state-cell">Loading alphabetical attendance report...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Uniform Verification Photo Modal -->
+                    <div id="uniformPhotoModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.7);backdrop-filter:blur(6px);z-index:9999;align-items:center;justify-content:center;padding:16px;">
+                        <div style="background:#fff;border-radius:20px;max-width:500px;width:100%;box-shadow:0 25px 60px rgba(0,0,0,0.3);overflow:hidden;">
+                            <div style="padding:16px 20px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;background:#f8fafc;">
+                                <div style="display:flex;align-items:center;gap:10px;">
+                                    <div style="width:34px;height:34px;background:#e0e7ff;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#4f46e5;">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                    </div>
+                                    <div>
+                                        <h3 style="font-size:15px;font-weight:800;color:#0f172a;margin:0;">Uniform Verification</h3>
+                                        <p style="font-size:11.5px;color:#64748b;margin:2px 0 0;" id="photoModalSub">Teacher Inspection</p>
+                                    </div>
+                                </div>
+                                <button type="button" id="closePhotoModalBtn" style="border:none;background:none;font-size:24px;color:#94a3b8;cursor:pointer;line-height:1;padding:4px 8px;">&times;</button>
+                            </div>
+
+                            <div style="padding:18px;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px 14px;margin-bottom:12px;">
+                                    <div>
+                                        <strong id="modalStudentName" style="font-size:13.5px;color:#0f172a;display:block;">--</strong>
+                                        <span id="modalStudentNum" style="font-size:12px;color:#2563eb;font-weight:600;font-family:monospace;">--</span>
+                                    </div>
+                                    <div id="modalStatusBadge">--</div>
+                                </div>
+
+                                <div style="position:relative;background:#0f172a;border-radius:12px;overflow:hidden;max-height:340px;min-height:200px;display:flex;align-items:center;justify-content:center;">
+                                    <img id="modalPhotoImage" src="" alt="Student Uniform" style="max-width:100%;max-height:340px;object-fit:contain;display:block;">
+                                </div>
+
+                                <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#f8fafc;padding:10px 14px;border-radius:12px;border:1px solid #e2e8f0;flex-wrap:wrap;">
+                                    <span style="font-size:12px;font-weight:700;color:#475569;">Adjust Status:</span>
+                                    <div style="display:flex;gap:6px;">
+                                        <button type="button" class="btn-modal-action" data-status="present" style="padding:6px 12px;border-radius:8px;border:1px solid #bbf7d0;background:#dcfce7;color:#15803d;font-size:11.5px;font-weight:700;cursor:pointer;">Present</button>
+                                        <button type="button" class="btn-modal-action" data-status="late" style="padding:6px 12px;border-radius:8px;border:1px solid #fde68a;background:#fef3c7;color:#b45309;font-size:11.5px;font-weight:700;cursor:pointer;">Late</button>
+                                        <button type="button" class="btn-modal-action" data-status="absent" style="padding:6px 12px;border-radius:8px;border:1px solid #fecaca;background:#fee2e2;color:#dc2626;font-size:11.5px;font-weight:700;cursor:pointer;">Absent</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal: Download CSV Attendance Report Options -->
+    <div id="exportCsvModal" class="modal-overlay hidden">
+        <div class="modal-dialog" style="max-width: 520px; border-radius: 20px;">
+            <div class="modal-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; background: #ecfdf5; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #059669;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="modal-title" style="font-size: 17px;">Download Attendance Report</h3>
+                        <p class="modal-subtitle">Configure section, grading term, and week coverage</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-close-btn" id="closeExportCsvModalBtn">&times;</button>
+            </div>
+
+            <form id="exportCsvForm">
+                <div class="modal-body" style="display: flex; flex-direction: column; gap: 16px;">
+                    
+                    <!-- 1. Select Section -->
+                    <div>
+                        <label class="modal-label" for="exportSectionSelect" style="font-size: 12.5px; font-weight: 700; color: #334155; margin-bottom: 6px;">Select Section:</label>
+                        <select id="exportSectionSelect" name="section_id" class="modal-select" style="width: 100%; height: 42px; font-weight: 600;">
+                            <!-- Populated dynamically via JS -->
+                        </select>
+                    </div>
+
+                    <!-- 2. Select Term (Prelim, Midterm, Final, Full Term) -->
+                    <div>
+                        <label class="modal-label" for="exportTermSelect" style="font-size: 12.5px; font-weight: 700; color: #334155; margin-bottom: 6px;">Grading Period / Term:</label>
+                        <select id="exportTermSelect" name="term" class="modal-select" style="width: 100%; height: 42px; font-weight: 600;">
+                            <option value="prelim" selected>Prelim (Weeks 1 to 6 / 1st Term)</option>
+                            <option value="midterm">Midterm (Weeks 7 to 12 / 2nd Term)</option>
+                            <option value="final">Final (Weeks 13 to 18 / 3rd Term)</option>
+                            <option value="all">Full Term (All Recorded Sessions / Weeks)</option>
+                        </select>
+                    </div>
+
+                    <!-- 3. Coverage Type & Date Filter -->
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px;">
+                        <label style="font-size: 12.5px; font-weight: 700; color: #1e293b; display: block; margin-bottom: 8px;">Date Coverage Option:</label>
+                        <div style="display: flex; gap: 16px; margin-bottom: 12px; font-size: 12.5px; color: #475569;">
+                            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <input type="radio" name="coverage_type" value="auto" checked id="covAuto">
+                                <span>Auto (All sessions in selected term)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <input type="radio" name="coverage_type" value="custom" id="covCustom">
+                                <span>Custom Date Range</span>
+                            </label>
+                        </div>
+
+                        <div id="customDateRangeBox" style="display: none; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="font-size: 11.5px; font-weight: 600; color: #64748b; margin-bottom: 4px; display: block;">From Date:</label>
+                                <input type="date" id="exportStartDate" name="start_date" class="modal-select" style="width: 100%; height: 38px; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="font-size: 11.5px; font-weight: 600; color: #64748b; margin-bottom: 4px; display: block;">To Date:</label>
+                                <input type="date" id="exportEndDate" name="end_date" class="modal-select" style="width: 100%; height: 38px; font-size: 12px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Attendance Value Format -->
+                    <div>
+                        <label class="modal-label" style="font-size: 12.5px; font-weight: 700; color: #334155; margin-bottom: 6px;">Attendance Cell Values:</label>
+                        <select id="exportStatusFormat" name="status_format" class="modal-select" style="width: 100%; height: 40px; font-size: 13px;">
+                            <option value="full" selected>Complete (PRESENT / LATE / ABSENT)</option>
+                            <option value="short">Shorthand (P / L / A)</option>
+                        </select>
+                    </div>
+
+                    <!-- Info banner -->
+                    <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 10px 14px; font-size: 12px; color: #1d4ed8; display: flex; align-items: flex-start; gap: 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        <span>Ang CSV ay nakaayos katulad ng official masterlist kasama ang <strong>Term Header sa itaas</strong>, mga haligi ng bawat <strong>Week</strong>, at summary ng <strong>Total Present, Late, Absent, at Attendance %</strong>.</span>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="btn-secondary" id="cancelExportCsvBtn" style="padding: 9px 18px;">Cancel</button>
+                    <button type="submit" class="btn-primary" style="background: #059669; border: none; padding: 9px 20px; display: flex; align-items: center; gap: 6px; font-weight: 700;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        <span>Download CSV Report</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script src="../js/reports.js"></script>
+    <script src="../js/mobile_nav.js"></script>
+</body>
+</html>

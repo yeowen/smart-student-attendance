@@ -1,0 +1,939 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Check-In Form Editor | Smart Student Attendance</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <style>
+        /* Form Editor Specific Styles */
+        .editor-layout {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* Fields Panel */
+        .fields-panel {
+            background: #fff;
+            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+        .panel-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .panel-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .panel-subtitle {
+            font-size: 12.5px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        /* Field Item */
+        .field-list {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .field-item {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+        .field-item:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .field-item.auto-field {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+        .field-item.auto-field .field-badge {
+            background: #dcfce7;
+            color: #15803d;
+        }
+        .field-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .field-icon.blue   { background: #dbeafe; color: #2563eb; }
+        .field-icon.green  { background: #dcfce7; color: #16a34a; }
+        .field-icon.amber  { background: #fef3c7; color: #d97706; }
+        .field-icon.rose   { background: #fee2e2; color: #dc2626; }
+        .field-icon.purple { background: #ede9fe; color: #7c3aed; }
+        .field-icon.slate  { background: #f1f5f9; color: #475569; }
+
+        .field-info { flex: 1; min-width: 0; }
+        .field-label-text { font-size: 13.5px; font-weight: 700; color: #0f172a; }
+        .field-desc       { font-size: 11.5px; color: #94a3b8; margin-top: 2px; }
+        .field-badge {
+            font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px;
+            padding: 3px 9px; border-radius: 6px;
+            background: #e2e8f0; color: #475569; white-space: nowrap;
+        }
+        .field-badge.required-badge { background: #fef3c7; color: #b45309; }
+
+        /* Toggle Switch */
+        .toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #cbd5e1; border-radius: 22px; transition: 0.2s;
+        }
+        .toggle-slider::before {
+            position: absolute; content: "";
+            height: 16px; width: 16px; left: 3px; bottom: 3px;
+            background: white; border-radius: 50%; transition: 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .toggle-switch input:checked + .toggle-slider { background: #2563eb; }
+        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
+        .toggle-switch input:disabled + .toggle-slider { background: #16a34a; cursor: not-allowed; opacity: 0.8; }
+        .toggle-switch input:disabled:checked + .toggle-slider::before { transform: translateX(18px); }
+
+        /* Add Custom Field */
+        .add-field-btn {
+            margin: 0 16px 16px;
+            width: calc(100% - 32px);
+            padding: 11px;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 10px;
+            background: transparent;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: all 0.2s;
+        }
+        .add-field-btn:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
+
+        /* Preview Panel */
+        .preview-panel { position: sticky; top: 24px; }
+        .preview-card {
+            background: #fff;
+            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+        .preview-phone-frame {
+            background: linear-gradient(135deg, #1e3a5f 0%, #1d4ed8 50%, #0891b2 100%);
+            padding: 24px 20px;
+        }
+        .preview-phone-inner {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 20px 16px;
+            min-height: 380px;
+        }
+        .preview-logo-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .preview-logo-badge {
+            width: 28px; height: 28px; background: #2563eb;
+            border-radius: 7px; display: flex; align-items: center; justify-content: center;
+        }
+        .preview-app-name { font-size: 11px; font-weight: 800; color: #0f172a; }
+        .preview-session-info { background: #eff6ff; border-radius: 8px; padding: 8px 10px; margin-bottom: 14px; }
+        .preview-session-info p { font-size: 10px; font-weight: 700; color: #1e40af; margin: 0; line-height: 1.6; }
+        .preview-field-preview { margin-bottom: 10px; }
+        .preview-field-label {
+            font-size: 10px; font-weight: 700; color: #374151;
+            margin-bottom: 4px; display: flex; align-items: center; gap: 4px;
+        }
+        .preview-field-label .req-star { color: #dc2626; }
+        .preview-field-input {
+            width: 100%; box-sizing: border-box; height: 30px;
+            background: #fff; border: 1.5px solid #d1d5db;
+            border-radius: 7px; padding: 0 8px;
+            font-size: 10px; color: #9ca3af;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: flex; align-items: center;
+        }
+        .preview-field-input.auto-fill { background: #f0fdf4; border-color: #86efac; color: #15803d; font-weight: 600; }
+        .preview-submit-btn {
+            width: 100%; background: #2563eb; color: white;
+            border: none; border-radius: 8px; padding: 10px;
+            font-size: 11px; font-weight: 700; margin-top: 12px;
+            font-family: 'Plus Jakarta Sans', sans-serif; cursor: default;
+        }
+
+        /* Settings */
+        .settings-section { padding: 16px 20px; border-top: 1px solid #f1f5f9; }
+        .settings-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 0; border-bottom: 1px solid #f8fafc;
+        }
+        .settings-row:last-child { border-bottom: none; }
+        .settings-label  { font-size: 12.5px; font-weight: 600; color: #374151; }
+        .settings-desc   { font-size: 11px; color: #94a3b8; margin-top: 1px; }
+
+        /* Save Bar */
+        .save-bar {
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            display: flex; gap: 10px;
+        }
+        .btn-save-form {
+            flex: 1; background: #2563eb; color: white;
+            border: none; border-radius: 10px; padding: 11px;
+            font-size: 13.5px; font-weight: 700; cursor: pointer;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            transition: all 0.2s;
+        }
+        .btn-save-form:hover { background: #1d4ed8; transform: translateY(-1px); }
+        .btn-preview-link {
+            background: #f1f5f9; color: #475569;
+            border: none; border-radius: 10px; padding: 11px 14px;
+            font-size: 13px; font-weight: 600; cursor: pointer;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: flex; align-items: center; gap: 6px;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .btn-preview-link:hover { background: #e2e8f0; }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 13px; font-weight: 600; color: #2563eb;
+            text-decoration: none; margin-bottom: 18px; transition: gap 0.2s;
+        }
+        .back-link:hover { gap: 8px; }
+
+        .custom-field-input {
+            width: 100%; box-sizing: border-box;
+            padding: 9px 12px; border: 1.5px solid #e2e8f0;
+            border-radius: 8px; font-size: 13.5px;
+            font-family: 'Plus Jakarta Sans', sans-serif; color: #0f172a;
+            outline: none; transition: border-color 0.15s;
+        }
+        .custom-field-input:focus { border-color: #2563eb; }
+
+        @keyframes savedPop {
+            0%   { transform: scale(0.95); opacity: 0.8; }
+            50%  { transform: scale(1.03); }
+            100% { transform: scale(1);    opacity: 1; }
+        }
+        .saved-pop { animation: savedPop 0.3s ease; }
+
+        @media (max-width: 900px) {
+            .editor-layout { grid-template-columns: 1fr; }
+            .preview-panel { position: static; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="app-logo-badge">
+                <img src="../assets/logo.png" alt="Logo" style="width: 26px; height: 26px; object-fit: contain;">
+            </div>
+            <div class="app-logo-text">
+                <span class="logo-title">Smart Attendance</span>
+                <span class="logo-tag">QR MONITORING SYSTEM</span>
+            </div>
+        </div>
+        <div class="nav-category">PROFESSOR WORKSPACE</div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-link">
+                <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="sections.html" class="nav-link">
+                <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+                <span class="nav-label">Sections</span>
+            </a>
+            <a href="attendance_sessions.html" class="nav-link active">
+                <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+                <span class="nav-label">Attendance Sessions</span>
+            </a>
+            <a href="reports.html" class="nav-link">
+                <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+                <span class="nav-label">Reports</span>
+            </a>
+            <a href="settings.html" class="nav-link">
+                <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+                <span class="nav-label">Settings</span>
+            </a>
+        </nav>
+        <div class="sidebar-user-box">
+            <div class="user-avatar-pill" id="sidebarAvatar">--</div>
+            <div class="user-details-text">
+                <span class="user-full-name" id="sidebarUserName">Loading...</span>
+                <span class="user-faculty-id" id="sidebarFacultyId">...</span>
+            </div>
+            <a href="../../conf/php/logout.php" class="logout-btn" title="Sign out">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="search-box">
+                <input type="text" placeholder="Form editor...">
+                <button type="button" class="search-box-btn" aria-label="Search" title="Search">
+                    <img src="../assets/icons/search.png" width="15" height="15" alt="Search">
+                </button>
+            </div>
+            <div class="topbar-actions">
+                <div class="date-badge"><span id="topbarDate">Loading date...</span></div>
+                <div class="topbar-profile">
+                    <div class="profile-avatar" id="topbarAvatar">--</div>
+                    <div class="profile-info">
+                        <span class="profile-name" id="topbarName">Loading...</span>
+                        <span class="profile-role" id="topbarRole">Faculty</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-content">
+            <div id="alertFeedback" class="alert hidden" style="padding:12px 16px;border-radius:10px;margin-bottom:20px;font-weight:600;font-size:13.5px;"></div>
+
+            <a href="attendance_sessions.html" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
+                Back to Attendance Sessions
+            </a>
+
+            <div class="dashboard-hero" style="margin-bottom:24px;">
+                <div>
+                    <h1 style="font-size:28px;font-weight:800;color:#0f172a;letter-spacing:-0.5px;">Student Check-In Form</h1>
+                    <p style="font-size:14px;color:#64748b;margin-top:4px;">Customize what students fill out when they scan your QR code.</p>
+                </div>
+                <div id="saveStatusBadge" style="display:flex;align-items:center;gap:8px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:10px;padding:10px 14px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <span id="saveStatusText" style="font-size:12.5px;font-weight:700;color:#15803d;">All changes saved</span>
+                </div>
+            </div>
+
+            <div class="editor-layout">
+
+                <!-- LEFT PANEL -->
+                <div>
+                    <!-- Auto-filled section -->
+                    <div class="fields-panel" style="margin-bottom:20px;">
+                        <div class="panel-header">
+                            <div>
+                                <div class="panel-title">Auto-Filled Fields</div>
+                                <div class="panel-subtitle">Pulled automatically from the session. Students cannot edit these.</div>
+                            </div>
+                            <span class="field-badge" style="background:#dcfce7;color:#15803d;">Always ON</span>
+                        </div>
+                        <div class="field-list">
+                            <div class="field-item auto-field">
+                                <div class="field-icon green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+                                <div class="field-info">
+                                    <div class="field-label-text">Session Info</div>
+                                    <div class="field-desc">Subject, Section, Date &amp; Time &mdash; auto from your session</div>
+                                </div>
+                                <span class="field-badge">Auto</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Student-Filled Fields -->
+                    <div class="fields-panel">
+                        <div class="panel-header">
+                            <div>
+                                <div class="panel-title">Student-Filled Fields</div>
+                                <div class="panel-subtitle">Toggle which fields appear on the student check-in form.</div>
+                            </div>
+                        </div>
+                        <div class="field-list" id="fieldList">
+
+                            <!-- Student Number is always on -->
+                            <div class="field-item" data-field="student_number">
+                                <div class="field-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+                                <div class="field-info">
+                                    <div class="field-label-text">Student Number</div>
+                                    <div class="field-desc">e.g. DEM0120260020 &mdash; verified against masterlist</div>
+                                </div>
+                                <span class="field-badge required-badge">Required</span>
+                                <label class="toggle-switch"><input type="checkbox" checked disabled><span class="toggle-slider"></span></label>
+                            </div>
+
+                            <!-- Full Name is auto-fetched and always on -->
+                            <div class="field-item" data-field="full_name">
+                                <div class="field-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                                <div class="field-info">
+                                    <div class="field-label-text">Full Name</div>
+                                    <div class="field-desc">Auto-fetched from masterlist after Student Number entry</div>
+                                </div>
+                                <span class="field-badge" style="background:#dbeafe;color:#1d4ed8;">Auto-fetch</span>
+                                <label class="toggle-switch"><input type="checkbox" checked disabled><span class="toggle-slider"></span></label>
+                            </div>
+
+                            <!-- Course -->
+                            <div class="field-item" data-field="course">
+                                <div class="field-icon amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+                                <div class="field-info">
+                                    <div class="field-label-text">Course</div>
+                                    <div class="field-desc">e.g. BSIT-A &mdash; auto-fetched from masterlist</div>
+                                </div>
+                                <span class="field-badge" style="background:#dbeafe;color:#1d4ed8;">Auto-fetch</span>
+                                <label class="toggle-switch"><input type="checkbox" id="toggle_course" checked><span class="toggle-slider"></span></label>
+                            </div>
+
+                            <!-- Year Level -->
+                            <div class="field-item" data-field="year_level">
+                                <div class="field-icon amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+                                <div class="field-info">
+                                    <div class="field-label-text">Year Level</div>
+                                    <div class="field-desc">e.g. Fourth Year &mdash; auto-fetched from masterlist</div>
+                                </div>
+                                <span class="field-badge" style="background:#dbeafe;color:#1d4ed8;">Auto-fetch</span>
+                                <label class="toggle-switch"><input type="checkbox" id="toggle_year_level" checked><span class="toggle-slider"></span></label>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="field-item" data-field="email">
+                                <div class="field-icon purple"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
+                                <div class="field-info">
+                                    <div class="field-label-text">Email Address</div>
+                                    <div class="field-desc">Student school email &mdash; auto-fetched from masterlist</div>
+                                </div>
+                                <span class="field-badge" style="background:#dbeafe;color:#1d4ed8;">Auto-fetch</span>
+                                <label class="toggle-switch"><input type="checkbox" id="toggle_email"><span class="toggle-slider"></span></label>
+                            </div>
+
+                            <!-- Remarks -->
+                            <div class="field-item" data-field="remarks">
+                                <div class="field-icon slate"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                                <div class="field-info">
+                                    <div class="field-label-text">Remarks / Note</div>
+                                    <div class="field-desc">Optional note the student can type (e.g. reason for late)</div>
+                                </div>
+                                <span class="field-badge">Manual</span>
+                                <label class="toggle-switch"><input type="checkbox" id="toggle_remarks"><span class="toggle-slider"></span></label>
+                            </div>
+                        </div>
+
+                        <!-- Custom fields -->
+                        <div id="customFieldList" class="field-list" style="padding-top:0;"></div>
+
+                        <button class="add-field-btn" id="addCustomFieldBtn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Add Custom Field
+                        </button>
+                    </div>
+
+                    <!-- Form Settings -->
+                    <div class="fields-panel" style="margin-top:20px;">
+                        <div class="panel-header">
+                            <div>
+                                <div class="panel-title">Form Settings</div>
+                                <div class="panel-subtitle">Behavior options for the student check-in form.</div>
+                            </div>
+                        </div>
+                        <div class="settings-section">
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Confirm before submitting</div>
+                                    <div class="settings-desc">Show a confirmation dialog before final submit</div>
+                                </div>
+                                <label class="toggle-switch"><input type="checkbox" id="setting_confirm" checked><span class="toggle-slider"></span></label>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Show success page after submit</div>
+                                    <div class="settings-desc">Display "Attendance recorded!" after submission</div>
+                                </div>
+                                <label class="toggle-switch"><input type="checkbox" id="setting_success_page" checked><span class="toggle-slider"></span></label>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Block duplicate submissions</div>
+                                    <div class="settings-desc">Prevent the same student from submitting twice</div>
+                                </div>
+                                <label class="toggle-switch"><input type="checkbox" id="setting_block_duplicate" checked><span class="toggle-slider"></span></label>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Allow only registered students</div>
+                                    <div class="settings-desc">Reject student numbers not found in the masterlist</div>
+                                </div>
+                                <label class="toggle-switch"><input type="checkbox" id="setting_masterlist_only" checked><span class="toggle-slider"></span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Live Preview -->
+                <div class="preview-panel">
+                    <div style="font-size:12px;font-weight:700;color:#94a3b8;letter-spacing:1px;text-align:center;margin-bottom:10px;">LIVE PREVIEW &mdash; STUDENT'S VIEW</div>
+                    <div class="preview-card">
+                        <div class="preview-phone-frame">
+                            <div class="preview-phone-inner">
+                                <div class="preview-logo-row">
+                                    <div class="preview-logo-badge">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+                                    </div>
+                                    <span class="preview-app-name">Smart Attendance</span>
+                                </div>
+                                <div class="preview-session-info">
+                                    <p><strong>IT 311 &middot; Advanced Web Systems</strong></p>
+                                    <p>Section: <strong>BSIT 3A</strong></p>
+                                    <p><strong>Thursday, Oct 15 &middot; 8:00 AM &ndash; 9:30 AM</strong></p>
+                                </div>
+                                <div id="previewFields"></div>
+                                <button class="preview-submit-btn">Submit Attendance</button>
+                            </div>
+                        </div>
+                        <div class="save-bar">
+                            <button class="btn-save-form" id="saveFormBtn">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                                Save Form Config
+                            </button>
+                            <a href="../../student_checkin.php?preview=1" target="_blank" class="btn-preview-link">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                Live Preview
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Custom Field Modal -->
+<div id="customFieldModal" class="modal-overlay hidden">
+    <div class="modal-dialog" style="max-width:440px;">
+        <div class="modal-header">
+            <div>
+                <h3 class="modal-title" id="customFieldModalTitle">Add Custom Field</h3>
+                <p class="modal-subtitle" id="customFieldModalSubtitle">Add an extra question for students to fill out</p>
+            </div>
+            <button type="button" class="modal-close-btn" id="closeCustomFieldModal">&times;</button>
+        </div>
+        <div class="modal-body" style="display:flex;flex-direction:column;gap:14px;">
+            <input type="hidden" id="editingCustomFieldIndex" value="-1">
+            <div>
+                <label class="modal-label">Quick Suggestions / Presets:</label>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
+                    <button type="button" class="preset-chip" id="presetUniformBtn" style="padding:5px 10px;font-size:11.5px;font-weight:600;border:1px solid #c7d2fe;background:#eef2ff;color:#4338ca;border-radius:6px;cursor:pointer;">Uniform Verification Photo</button>
+                    <button type="button" class="preset-chip" id="presetIdBtn" style="padding:5px 10px;font-size:11.5px;font-weight:600;border:1px solid #cbd5e1;background:#f8fafc;color:#475569;border-radius:6px;cursor:pointer;">Student ID Photo</button>
+                    <button type="button" class="preset-chip" id="presetTempBtn" style="padding:5px 10px;font-size:11.5px;font-weight:600;border:1px solid #cbd5e1;background:#f8fafc;color:#475569;border-radius:6px;cursor:pointer;">Temperature</button>
+                </div>
+            </div>
+            <div>
+                <label class="modal-label">Field Label (what students will see):</label>
+                <input type="text" id="customFieldLabel" class="custom-field-input" placeholder="e.g. Uniform Verification Photo, Emergency Contact...">
+            </div>
+            <div>
+                <label class="modal-label">Field Type:</label>
+                <select id="customFieldType" class="modal-select">
+                    <option value="image">Image / Photo Upload (e.g. Uniform Verification)</option>
+                    <option value="text">Short Text</option>
+                    <option value="textarea">Long Text / Paragraph</option>
+                    <option value="number">Number</option>
+                    <option value="select">Dropdown (Yes / No)</option>
+                </select>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;background:#f8fafc;border-radius:8px;">
+                <label class="toggle-switch"><input type="checkbox" id="customFieldRequired"><span class="toggle-slider"></span></label>
+                <span style="font-size:13px;font-weight:600;color:#374151;">Mark as Required (Student must upload/answer before submitting)</span>
+            </div>
+        </div>
+        <div class="modal-footer" style="margin-top:20px;">
+            <button type="button" class="btn-secondary" id="cancelCustomFieldBtn">Cancel</button>
+            <button type="button" class="btn-primary" id="confirmAddCustomField" style="background:#2563eb;">Add Field</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Load user info from sessions API
+    fetch('../../conf/php/attendance_sessions_data.php')
+        .then(r => { if (r.status === 401) { window.location.href = 'login.html'; return null; } return r.json(); })
+        .then(data => {
+            if (!data || !data.success) return;
+            const u = data.user;
+            ['sidebarAvatar','topbarAvatar'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = u.avatar_initials || 'CP'; });
+            const sbName = document.getElementById('sidebarUserName'); if(sbName) sbName.textContent = 'Prof. ' + u.name;
+            const sbId   = document.getElementById('sidebarFacultyId'); if(sbId)   sbId.textContent   = 'Faculty ID ' + u.faculty_id;
+            const tbName = document.getElementById('topbarName');       if(tbName) tbName.textContent  = u.name;
+            const tbRole = document.getElementById('topbarRole');       if(tbRole) tbRole.textContent  = u.title || 'Professor';
+            const tbDate = document.getElementById('topbarDate');       if(tbDate) tbDate.textContent  = data.today_date;
+        }).catch(() => {});
+
+    document.addEventListener("click", (e) => {
+        const btn = e.target.closest(".search-box-btn");
+        if (btn) {
+            const box = btn.closest(".search-box");
+            if (box) {
+                const input = box.querySelector("input");
+                if (input) {
+                    input.focus();
+                    input.dispatchEvent(new Event("input", { bubbles: true }));
+                }
+            }
+        }
+    });
+
+    const STORAGE_KEY = 'smartattend_form_config';
+
+    // Default config
+    const defaultConfig = {
+        fields:   { student_number: true, full_name: true, course: true, year_level: true, email: false, remarks: false },
+        custom_fields: [],
+        settings: { confirm: true, success_page: true, block_duplicate: true, masterlist_only: true }
+    };
+
+    let config = defaultConfig;
+    try { const s = localStorage.getItem(STORAGE_KEY); if (s) config = JSON.parse(s); } catch(e) {}
+
+    let customFields = Array.isArray(config.custom_fields) ? config.custom_fields : [];
+
+    // Load persisted server config (if present)
+    fetch('../../conf/php/form_config_data.php')
+        .then(r => r.json())
+        .then(d => {
+            if (d && d.success && d.config) {
+                config = d.config;
+                customFields = Array.isArray(config.custom_fields) ? config.custom_fields : [];
+                applyConfig();
+                updatePreview();
+            }
+        }).catch(() => {});
+
+    function applyConfig() {
+        ['course','year_level','email','remarks'].forEach(f => {
+            const el = document.getElementById('toggle_' + f);
+            if (el) el.checked = config.fields[f] !== false;
+        });
+        ['confirm','success_page','block_duplicate','masterlist_only'].forEach(s => {
+            const el = document.getElementById('setting_' + s);
+            if (el) el.checked = config.settings[s] !== false;
+        });
+        renderCustomFields();
+    }
+
+    // Field definitions for preview
+    const fieldDefs = [
+        { key: 'student_number', label: 'Student Number',  placeholder: 'e.g. DEM0120260020',       required: true,  autofill: false },
+        { key: 'full_name',      label: 'Full Name',        placeholder: 'ABAD, BRANDON NAVARRO',    required: true,  autofill: true  },
+        { key: 'course',         label: 'Course',           placeholder: 'BSIT-A',                   required: false, autofill: true  },
+        { key: 'year_level',     label: 'Year Level',       placeholder: 'Fourth Year',              required: false, autofill: true  },
+        { key: 'email',          label: 'Email Address',    placeholder: 'student@school.edu',       required: false, autofill: true  },
+        { key: 'remarks',        label: 'Remarks / Note',   placeholder: 'Type your note here...',   required: false, autofill: false  },
+    ];
+
+    function updatePreview() {
+        const container = document.getElementById('previewFields');
+        if (!container) return;
+        let html = '';
+        fieldDefs.forEach(f => {
+            const isOn = (f.key === 'student_number' || f.key === 'full_name')
+                ? true
+                : !!document.getElementById('toggle_' + f.key)?.checked;
+            if (!isOn) return;
+            html += '<div class="preview-field-preview">'
+                + '<div class="preview-field-label">'
+                + esc(f.label)
+                + (f.required ? ' <span class="req-star">*</span>' : '')
+                + (f.autofill ? ' <span style="font-size:9px;background:#dbeafe;color:#1d4ed8;padding:1px 5px;border-radius:4px;font-weight:700;">auto</span>' : '')
+                + '</div>'
+                + '<div class="preview-field-input' + (f.autofill ? ' auto-fill' : '') + '">' + esc(f.placeholder) + '</div>'
+                + '</div>';
+        });
+        customFields.forEach(cf => {
+            html += '<div class="preview-field-preview">'
+                + '<div class="preview-field-label">' + esc(cf.label)
+                + (cf.required ? ' <span class="req-star">*</span>' : ' <span style="font-size:9.5px;color:#94a3b8;font-weight:600;">(optional)</span>') + '</div>';
+            
+            if (cf.type === 'image') {
+                html += '<div style="border:1.5px dashed #93c5fd;background:#f0f7ff;border-radius:8px;padding:10px 8px;text-align:center;">'
+                    + '<div style="font-size:10px;font-weight:700;color:#1e40af;display:flex;align-items:center;justify-content:center;gap:4px;">'
+                    + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>'
+                    + 'Take Photo / Upload Image'
+                    + '</div>'
+                    + '<div style="font-size:8.5px;color:#64748b;margin-top:2px;">Camera capture &amp; file upload ready</div>'
+                    + '</div>';
+            } else {
+                html += '<div class="preview-field-input">' + (cf.type === 'textarea' ? 'Type here...' : cf.type === 'select' ? 'Yes / No &darr;' : 'Enter value...') + '</div>';
+            }
+            html += '</div>';
+        });
+        if (!html) html = '<p style="font-size:11px;color:#94a3b8;text-align:center;padding:12px 0;">No fields enabled</p>';
+        container.innerHTML = html;
+    }
+
+    function renderCustomFields() {
+        const container = document.getElementById('customFieldList');
+        if (!container) return;
+        container.innerHTML = '';
+        customFields.forEach((cf, idx) => {
+            const isImage = cf.type === 'image';
+            const iconHtml = isImage
+                ? '<div class="field-icon purple"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>'
+                : '<div class="field-icon slate"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>';
+            
+            const typeLabel = isImage ? 'Photo / Image Upload' : cf.type;
+
+            const div = document.createElement('div');
+            div.className = 'field-item';
+            div.innerHTML = iconHtml
+                + '<div class="field-info"><div class="field-label-text">' + esc(cf.label) + '</div><div class="field-desc">Custom &middot; ' + esc(typeLabel) + '</div></div>'
+                + '<div style="display:flex;align-items:center;gap:8px;">'
+                + (cf.required
+                    ? '<span class="field-badge required-badge" style="cursor:pointer;user-select:none;" onclick="toggleCustomFieldRequired(' + idx + ')" title="Click to make Optional">Required</span>'
+                    : '<span class="field-badge" style="cursor:pointer;user-select:none;" onclick="toggleCustomFieldRequired(' + idx + ')" title="Click to make Required">Optional</span>')
+                + '<label class="toggle-switch" title="Toggle Required / Optional">'
+                + '<input type="checkbox" ' + (cf.required ? 'checked' : '') + ' onchange="toggleCustomFieldRequired(' + idx + ', this.checked)">'
+                + '<span class="toggle-slider"></span>'
+                + '</label>'
+                + '<button type="button" onclick="editCustomField(' + idx + ')" style="background:none;border:none;cursor:pointer;color:#3b82f6;padding:5px;display:flex;align-items:center;border-radius:6px;transition:background 0.15s;" title="Edit Field">'
+                + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'
+                + '<button type="button" onclick="removeCustomField(' + idx + ')" style="background:none;border:none;cursor:pointer;color:#ef4444;padding:5px;display:flex;align-items:center;border-radius:6px;transition:background 0.15s;" title="Delete Field">'
+                + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>'
+                + '</div>';
+            container.appendChild(div);
+        });
+        updatePreview();
+    }
+
+    window.toggleCustomFieldRequired = function(idx, forcedVal) {
+        if (!customFields[idx]) return;
+        if (typeof forcedVal === 'boolean') {
+            customFields[idx].required = forcedVal;
+        } else {
+            customFields[idx].required = !customFields[idx].required;
+        }
+        renderCustomFields();
+        markUnsaved();
+    };
+
+    window.editCustomField = function(idx) {
+        const cf = customFields[idx];
+        if (!cf) return;
+        const editIdxInput = document.getElementById('editingCustomFieldIndex');
+        const modalTitle   = document.getElementById('customFieldModalTitle');
+        const modalSub     = document.getElementById('customFieldModalSubtitle');
+        const confirmBtn   = document.getElementById('confirmAddCustomField');
+        const labelInput   = document.getElementById('customFieldLabel');
+        const typeSelect   = document.getElementById('customFieldType');
+        const reqCheck     = document.getElementById('customFieldRequired');
+
+        if (editIdxInput) editIdxInput.value = idx;
+        if (modalTitle)   modalTitle.textContent = 'Edit Custom Field';
+        if (modalSub)     modalSub.textContent = 'Update field question, type, or requirement';
+        if (confirmBtn)   confirmBtn.textContent = 'Save Changes';
+        if (labelInput)   labelInput.value = cf.label || '';
+        if (typeSelect)   typeSelect.value = cf.type || 'text';
+        if (reqCheck)     reqCheck.checked = !!cf.required;
+
+        cfModal.classList.remove('hidden');
+    };
+
+    window.removeCustomField = function(idx) {
+        customFields.splice(idx, 1);
+        renderCustomFields();
+        markUnsaved();
+    };
+
+    // Attach change listeners
+    ['course','year_level','email','remarks'].forEach(f => {
+        document.getElementById('toggle_' + f)?.addEventListener('change', () => { updatePreview(); markUnsaved(); });
+    });
+    ['confirm','success_page','block_duplicate','masterlist_only'].forEach(s => {
+        document.getElementById('setting_' + s)?.addEventListener('change', markUnsaved);
+    });
+
+    function markUnsaved() {
+        const badge = document.getElementById('saveStatusBadge');
+        const text  = document.getElementById('saveStatusText');
+        if (badge) { badge.style.background = '#fef3c7'; badge.style.borderColor = '#fde68a'; }
+        if (text)  { text.textContent = 'Unsaved changes'; text.style.color = '#b45309'; }
+    }
+
+    async function saveConfig() {
+        config.fields = {
+            student_number: true,
+            full_name:      true,
+            course:         !!document.getElementById('toggle_course')?.checked,
+            year_level:     !!document.getElementById('toggle_year_level')?.checked,
+            email:          !!document.getElementById('toggle_email')?.checked,
+            remarks:        !!document.getElementById('toggle_remarks')?.checked
+        };
+        config.settings = {
+            confirm:           !!document.getElementById('setting_confirm')?.checked,
+            success_page:      !!document.getElementById('setting_success_page')?.checked,
+            block_duplicate:   !!document.getElementById('setting_block_duplicate')?.checked,
+            masterlist_only:   !!document.getElementById('setting_masterlist_only')?.checked
+        };
+        config.custom_fields = customFields;
+
+        // 1. Save to localStorage (instant)
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+
+        // 2. Also POST to server so student_checkin.php can read it
+        const btn  = document.getElementById('saveFormBtn');
+        const text = document.getElementById('saveStatusText');
+        const badge = document.getElementById('saveStatusBadge');
+
+        if (btn) btn.disabled = true;
+        if (text) text.textContent = 'Saving...';
+
+        try {
+            const fd = new FormData();
+            fd.append('action', 'save_config');
+            fd.append('config', JSON.stringify(config));
+            const res  = await fetch('../../conf/php/form_config_data.php', { method: 'POST', body: fd });
+            const data = await res.json();
+
+            if (data.success) {
+                if (badge) { badge.style.background = '#f0fdf4'; badge.style.borderColor = '#bbf7d0'; }
+                if (text)  { text.textContent = 'All changes saved'; text.style.color = '#15803d'; }
+                showAlert('Form configuration saved successfully!', 'success');
+            } else {
+                if (badge) { badge.style.background = '#fef3c7'; badge.style.borderColor = '#fde68a'; }
+                if (text)  { text.textContent = 'Saved locally only'; text.style.color = '#b45309'; }
+                showAlert('Saved to browser. Server save failed: ' + (data.message || ''), 'error');
+            }
+        } catch(e) {
+            // Fallback: still saved to localStorage
+            if (badge) { badge.style.background = '#f0fdf4'; badge.style.borderColor = '#bbf7d0'; }
+            if (text)  { text.textContent = 'Saved (local)'; text.style.color = '#15803d'; }
+            showAlert('Saved to browser only (server unreachable)', 'success');
+        }
+
+        if (btn) {
+            btn.disabled = false;
+            btn.classList.add('saved-pop');
+            setTimeout(() => btn.classList.remove('saved-pop'), 300);
+        }
+    }
+
+    document.getElementById('saveFormBtn')?.addEventListener('click', saveConfig);
+
+    // Custom Field Modal
+    const cfModal = document.getElementById('customFieldModal');
+    document.getElementById('addCustomFieldBtn')?.addEventListener('click', () => {
+        const editIdxInput = document.getElementById('editingCustomFieldIndex');
+        const modalTitle   = document.getElementById('customFieldModalTitle');
+        const modalSub     = document.getElementById('customFieldModalSubtitle');
+        const confirmBtn   = document.getElementById('confirmAddCustomField');
+        const labelInput   = document.getElementById('customFieldLabel');
+        const typeSelect   = document.getElementById('customFieldType');
+        const reqCheck     = document.getElementById('customFieldRequired');
+
+        if (editIdxInput) editIdxInput.value = '-1';
+        if (modalTitle)   modalTitle.textContent = 'Add Custom Field';
+        if (modalSub)     modalSub.textContent = 'Add an extra question for students to fill out';
+        if (confirmBtn)   confirmBtn.textContent = 'Add Field';
+        if (labelInput)   labelInput.value = '';
+        if (typeSelect)   typeSelect.value = 'image';
+        if (reqCheck)     reqCheck.checked = false;
+
+        cfModal.classList.remove('hidden');
+    });
+    document.getElementById('closeCustomFieldModal')?.addEventListener('click', () => cfModal.classList.add('hidden'));
+    document.getElementById('cancelCustomFieldBtn')?.addEventListener('click',  () => cfModal.classList.add('hidden'));
+
+    // Preset buttons
+    document.getElementById('presetUniformBtn')?.addEventListener('click', () => {
+        const lbl = document.getElementById('customFieldLabel');
+        const typ = document.getElementById('customFieldType');
+        const req = document.getElementById('customFieldRequired');
+        if (lbl) lbl.value = 'Uniform Verification Photo';
+        if (typ) typ.value = 'image';
+        if (req) req.checked = true;
+    });
+    document.getElementById('presetIdBtn')?.addEventListener('click', () => {
+        const lbl = document.getElementById('customFieldLabel');
+        const typ = document.getElementById('customFieldType');
+        const req = document.getElementById('customFieldRequired');
+        if (lbl) lbl.value = 'Student ID Photo';
+        if (typ) typ.value = 'image';
+        if (req) req.checked = false;
+    });
+    document.getElementById('presetTempBtn')?.addEventListener('click', () => {
+        const lbl = document.getElementById('customFieldLabel');
+        const typ = document.getElementById('customFieldType');
+        const req = document.getElementById('customFieldRequired');
+        if (lbl) lbl.value = 'Body Temperature (°C)';
+        if (typ) typ.value = 'number';
+        if (req) req.checked = false;
+    });
+    document.getElementById('confirmAddCustomField')?.addEventListener('click', () => {
+        const labelInput = document.getElementById('customFieldLabel');
+        const label = labelInput?.value.trim();
+        if (!label) { labelInput?.focus(); return; }
+        const type     = document.getElementById('customFieldType')?.value || 'text';
+        const required = !!document.getElementById('customFieldRequired')?.checked;
+        const editIdx  = parseInt(document.getElementById('editingCustomFieldIndex')?.value ?? '-1', 10);
+
+        if (editIdx >= 0 && customFields[editIdx]) {
+            customFields[editIdx] = { label, type, required };
+        } else {
+            customFields.push({ label, type, required });
+        }
+
+        labelInput.value = '';
+        document.getElementById('customFieldRequired').checked = false;
+        document.getElementById('editingCustomFieldIndex').value = '-1';
+        cfModal.classList.add('hidden');
+        renderCustomFields();
+        markUnsaved();
+    });
+
+    function showAlert(msg, type) {
+        const box = document.getElementById('alertFeedback');
+        if (!box) return;
+        box.textContent = msg;
+        box.style.background = type === 'success' ? '#dcfce7' : '#fee2e2';
+        box.style.color      = type === 'success' ? '#15803d'  : '#b91c1c';
+        box.classList.remove('hidden');
+        setTimeout(() => box.classList.add('hidden'), 4000);
+    }
+
+    function esc(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    applyConfig();
+    updatePreview();
+});
+</script>
+    <script src="../js/mobile_nav.js"></script>
+</body>
+</html>
