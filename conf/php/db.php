@@ -22,6 +22,14 @@ try {
     ];
     // Enable SSL for remote cloud databases (e.g. TiDB Cloud)
     if ($db_host !== '127.0.0.1' && $db_host !== 'localhost') {
+        $caCert = __DIR__ . '/../isrgrootx1.pem';
+        if (file_exists($caCert)) {
+            $pdoOptions[PDO::MYSQL_ATTR_SSL_CA] = $caCert;
+        } elseif (file_exists('/etc/ssl/certs/ca-certificates.crt')) {
+            $pdoOptions[PDO::MYSQL_ATTR_SSL_CA] = '/etc/ssl/certs/ca-certificates.crt';
+        } elseif (file_exists('/etc/pki/tls/certs/ca-bundle.crt')) {
+            $pdoOptions[PDO::MYSQL_ATTR_SSL_CA] = '/etc/pki/tls/certs/ca-bundle.crt';
+        }
         $pdoOptions[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
     }
 
