@@ -35,72 +35,64 @@
       "dest": "/pub/assets/$1"
     },
     {
+      "src": "^/pub/css/(.*)$",
+      "dest": "/pub/css/$1"
+    },
+    {
+      "src": "^/pub/js/(.*)$",
+      "dest": "/pub/js/$1"
+    },
+    {
+      "src": "^/pub/assets/(.*)$",
+      "dest": "/pub/assets/$1"
+    },
+    {
+      "src": "^/uploads/(.*)$",
+      "dest": "/uploads/$1"
+    },
+    {
       "src": "^/$",
-      "dest": "/pub/html/login.html"
+      "dest": "/index.html"
     },
     {
-      "src": "^/login$",
-      "dest": "/pub/html/login.html"
-    },
-    {
-      "src": "^/pub/html/login(\\.html)?$",
-      "dest": "/pub/html/login.html"
-    },
-    {
-      "src": "^/dashboard$",
+      "src": "^/dashboard(\\.html)?$",
       "dest": "/pub/html/dashboard.html"
     },
     {
-      "src": "^/pub/html/dashboard(\\.html)?$",
-      "dest": "/pub/html/dashboard.html"
-    },
-    {
-      "src": "^/sections$",
+      "src": "^/sections(\\.html)?$",
       "dest": "/pub/html/sections.html"
     },
     {
-      "src": "^/pub/html/sections(\\.html)?$",
-      "dest": "/pub/html/sections.html"
-    },
-    {
-      "src": "^/attendance_sessions$",
-      "dest": "/pub/html/attendance_sessions.html"
-    },
-    {
-      "src": "^/pub/html/attendance_sessions(\\.html)?$",
-      "dest": "/pub/html/attendance_sessions.html"
-    },
-    {
-      "src": "^/reports$",
-      "dest": "/pub/html/reports.html"
-    },
-    {
-      "src": "^/pub/html/reports(\\.html)?$",
-      "dest": "/pub/html/reports.html"
-    },
-    {
-      "src": "^/settings$",
-      "dest": "/pub/html/settings.html"
-    },
-    {
-      "src": "^/pub/html/settings(\\.html)?$",
-      "dest": "/pub/html/settings.html"
-    },
-    {
-      "src": "^/section_details$",
+      "src": "^/section_details(\\.html)?$",
       "dest": "/pub/html/section_details.html"
     },
     {
-      "src": "^/pub/html/section_details(\\.html)?$",
-      "dest": "/pub/html/section_details.html"
+      "src": "^/attendance_sessions(\\.html)?$",
+      "dest": "/pub/html/attendance_sessions.html"
     },
     {
-      "src": "^/student_form_editor$",
+      "src": "^/reports(\\.html)?$",
+      "dest": "/pub/html/reports.html"
+    },
+    {
+      "src": "^/settings(\\.html)?$",
+      "dest": "/pub/html/settings.html"
+    },
+    {
+      "src": "^/student_form_editor(\\.html)?$",
       "dest": "/pub/html/student_form_editor.html"
     },
     {
-      "src": "^/pub/html/student_form_editor(\\.html)?$",
-      "dest": "/pub/html/student_form_editor.html"
+      "src": "^/login(\\.html)?$",
+      "dest": "/pub/html/login.html"
+    },
+    {
+      "src": "^/pub/html/([^/]+)(\\.html)?$",
+      "dest": "/pub/html/$1.html"
+    },
+    {
+      "src": "^/([^/]+)\\.html$",
+      "dest": "/pub/html/$1.html"
     },
     {
       "handle": "filesystem"

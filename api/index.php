@@ -12,6 +12,12 @@ $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 
 // 1. Student Check-in endpoints
 if ($uri === '/checkin' || strpos($uri, '/checkin/') === 0 || $uri === '/student_checkin.php') {
+    if (strpos($uri, '/checkin/') === 0) {
+        $tokenParam = substr($uri, strlen('/checkin/'));
+        if (!empty($tokenParam) && empty($_GET['token'])) {
+            $_GET['token'] = $tokenParam;
+        }
+    }
     require $rootDir . '/student_checkin.php';
     exit;
 }
