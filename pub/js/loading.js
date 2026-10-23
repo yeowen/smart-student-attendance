@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const skipBtn = document.getElementById("skip-btn");
     const card = document.querySelector(".loading-card");
 
-    const targetUrl = window.location.pathname.includes('/pub/') ? 'html/login' : 'pub/html/login';
+    const targetUrl = window.location.pathname.includes('/pub/') ? 'html/login.html' : 'login';
     let progress = 0;
     let isRedirecting = false;
 

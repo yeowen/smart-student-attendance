@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.9.0"
@@ -47,8 +48,12 @@
       "dest": "/pub/html/settings.html"
     },
     {
+      "src": "/pub/html/(.*)\\.html",
+      "dest": "/pub/html/$1.html"
+    },
+    {
       "src": "/pub/html/(.*)",
-      "dest": "/pub/html/$1"
+      "dest": "/pub/html/$1.html"
     },
     {
       "handle": "filesystem"
